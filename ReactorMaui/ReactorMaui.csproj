@@ -38,8 +38,25 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Platforms\Android\google-services.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <GoogleServicesJson Include="Platforms\Android\google-services.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Maui" Version="4.0.0" />
+    <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Plugin.CloudFirestore" Version="4.1.0" />
     <PackageReference Include="Reactor.Maui" Version="1.0.104" />
     <PackageReference Include="Reactor.Maui.Canvas" Version="1.0.104" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+    <PackageReference Include="Xamarin.Firebase.Messaging">
+      <Version>123.1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Base">
+      <Version>118.1.0.1</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>
