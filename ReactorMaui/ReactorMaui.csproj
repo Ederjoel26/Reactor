@@ -39,6 +39,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Platforms\Android\google-services.json" />
+    <None Remove="Resources\Images\Alarma.png" />
+    <None Remove="Resources\Images\alarma_desactivar.png" />
+    <None Remove="Resources\Images\Ayuda.png" />
+    <None Remove="Resources\Images\contenedor_one.png" />
+    <None Remove="Resources\Images\contenedor_two.png" />
+    <None Remove="Resources\Images\Emergencia.png" />
+    <None Remove="Resources\Images\ladron_auto.png" />
+    <None Remove="Resources\Images\ladron_casa.png" />
+    <None Remove="Resources\Images\ladron_robando.png" />
+    <None Remove="Resources\Images\Porton.png" />
+    <None Remove="Resources\Images\puerta_peatonal.png" />
+    <None Remove="Resources\Images\ver_ladron.png" />
   </ItemGroup>
   <ItemGroup>
     <GoogleServicesJson Include="Platforms\Android\google-services.json" />

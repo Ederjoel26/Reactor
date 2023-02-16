@@ -1,18 +1,21 @@
-﻿using Firebase.Components;
-using MauiReactor;
+﻿using MauiReactor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Google.Crypto.Tink.Signature;
+using Microsoft.Maui.Graphics;
+using Microsoft.Extensions.Logging.Abstractions;
+using CommunityToolkit.Maui.Behaviors;
 
 namespace ReactorMaui.Pages
 {
 
     public class HistorialState
     {
-        public DateTime SelectedIndex { get; set; }
+        public DateTime Date { get; set; }
+        public bool IsCalendarVisible { get; set; }
+        public DatePicker date { get; set; }
     }
     public class Historial: Component<HistorialState>
     {
@@ -20,13 +23,9 @@ namespace ReactorMaui.Pages
         {
             return new ContentPage()
             {
-                new StackLayout()
-                {
-                    new DatePicker()
-                        .HCenter()
-                        .VCenter()
-                }
+                new DatePicker()
+                    
             };
-        }
+        }   
     }
 }

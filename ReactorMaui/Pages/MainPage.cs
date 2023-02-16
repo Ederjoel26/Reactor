@@ -34,56 +34,128 @@ namespace ReactorMaui.Pages
                 {
                     new TabBar()
                     {
-                        new Tab("Actuadores")
+                        new Tab("SERVICIOS")
                         {
-                            new ContentPage("Actuadores")
+                            new ContentPage("Servicios")
                             {
-                                new StackLayout()
+                                new Grid("5*, 90*, 5*", "5*, 90*, 5*")
                                 {
-                                    new Label(lbl => Aviso = lbl)
-                                        .Text("Favor de ingresar sus datos en el area de configuración")
-                                        .IsVisible(true)
-                                        .HCenter()
-                                        .VCenter()
-                                        .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Italic)
-                                        .FontSize(20)
-                                        .TextColor(Color.Parse("black"))
-                                        .HorizontalTextAlignment(TextAlignment.Center)
-                                        .IsVisible(false),
-
-                                    new StackLayout(sl => Pagina = sl)
+                                    new Grid("20*, 20*, 20*, 20*, 20*", "*")
                                     {
-                                        new Button("Vehicular")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Vehicular", true)),
+                                        new Grid("80*, 20*", "*")
+                                        {
+                                            new ImageButton("porton.png")
+                                                .HCenter()
+                                                .VCenter()
+                                                .OnClicked(() => SetValor("Vehicular", true))
+                                                .GridRow(0)
+                                                .GridColumn(0), 
 
-                                        new Button("Peatonal")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Peatonal", true)),
+                                            new Label()
+                                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                                .HCenter()
+                                                .VCenter()
+                                                .HorizontalTextAlignment(TextAlignment.Center)
+                                                .Text("Abrir puerta vehicular")
+                                                .GridRow(1)
+                                                .GridColumn(0)
+                                        }
+                                        .GridColumn(0)
+                                        .GridRow(0),
 
-                                        new Button("Basura uno")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Basura1", true)),
+                                        new Grid("80*, 20*", "*")
+                                        {
+                                             new ImageButton("puerta_peatonal.png")
+                                                .HCenter()
+                                                .VCenter()
+                                                .OnClicked(() => SetValor("Peatonal", true))
+                                                .GridRow(0)
+                                                .GridColumn(0),
 
-                                        new Button("Basura dos")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Basura2", true)),
+                                            new Label()
+                                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                                .HCenter()
+                                                .VCenter()
+                                                .HorizontalTextAlignment(TextAlignment.Center)
+                                                .Text("Abrir puerta peatonal")
+                                                .GridRow(1)
+                                                .GridColumn(0)
+                                        }
+                                        .GridColumn(0)
+                                        .GridRow(1),
 
-                                        new Button("Alarma encender")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Alarma", true)),
+                                        new Grid("80*, 20*", "*")
+                                        {
+                                             new ImageButton("contenedor_one.png")
+                                                .HCenter()
+                                                .VCenter()
+                                                .OnClicked(() => SetValor("Basura1", true))
+                                                .GridRow(0)
+                                                .GridColumn(0),
 
-                                        new Button("Alarma cerrar")
-                                            .HCenter()
-                                            .VCenter()
-                                            .OnClicked(() => SetValor("Alarma", false))
+                                            new Label()
+                                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                                .HCenter()
+                                                .VCenter()
+                                                .HorizontalTextAlignment(TextAlignment.Center)
+                                                .Text("Abrir contenedor de basura 1")
+                                                .GridRow(1)
+                                                .GridColumn(0)
+                                        }
+                                        .GridColumn(0)
+                                        .GridRow(2),
+
+
+                                        new Grid("80*, 20*", "*")
+                                        {
+                                             new ImageButton("contenedor_two.png")
+                                                .HCenter()
+                                                .VCenter()
+                                                .OnClicked(() => SetValor("Basura2", true))
+                                                .GridRow(0)
+                                                .GridColumn(0),
+
+                                            new Label()
+                                                .HCenter()
+                                                .VCenter()
+                                                .HorizontalTextAlignment(TextAlignment.Center)
+                                                .Text("Abrir contenedor de basura 2")
+                                                .GridRow(1)
+                                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                                .GridColumn(0)
+                                        }
+                                        .GridColumn(0)
+                                        .GridRow(3),
+
+                                        new Grid("80*, 20*", "*")
+                                        {
+                                             new ImageButton("alarma.png")
+                                                .HCenter()
+                                                .VCenter()
+                                                .OnClicked(() => SetValor("Alarma", true))
+                                                .GridRow(0)
+                                                .GridColumn(0),
+
+                                            new Label()
+                                                .HCenter()
+                                                .VCenter()
+                                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                                .HorizontalTextAlignment(TextAlignment.Center)
+                                                .Text("Activar la alarma")
+                                                .GridRow(1)
+                                                .GridColumn(0)
+                                        }
+                                        .GridColumn(0)
+                                        .GridRow(4)
+
                                     }
-                                    .IsVisible(true)
+                                    .GridRow(1)
+                                    .GridColumn(1)
+                                    .HCenter()
+                                    .VCenter()
+                                    .RowSpacing(10)
+                                    .ColumnSpacing(10)
+
                                 }
                                 .HCenter()
                                 .VCenter()
@@ -98,6 +170,11 @@ namespace ReactorMaui.Pages
                         new Tab("CONFIGURACIÓN")
                         {
                             new Configuracion()
+                        },
+
+                        new Tab("HISTORIAL")
+                        {
+                            new Historial()
                         }
                     }
                 }
@@ -150,16 +227,37 @@ namespace ReactorMaui.Pages
             }
 
             await client.UpdateAsync("NumSerie", actores);
+            Thread.Sleep(2000);
+            switch (Campo)
+            {
+                case "Vehicular":
+                    actores.Vehicular = !Valor;
+                    break;
+                case "Peatonal":
+                    actores.Peatonal = !Valor;
+                    break;
+                case "Basura1":
+                    actores.Basura1 = !Valor;
+                    break;
+                case "Basura2":
+                    actores.Basura2 = !Valor;
+                    break;
+                case "Alarma":
+                    actores.Alarma = !Valor;
+                    Mensaje = Valor ? "Se activó la alarma." : "Se desactivó la alarma.";
+                    break;
+            }
+            await client.UpdateAsync("NumSerie", actores);
         }
 
-        public void VerificarPreferences()
-        {
-            if (Preferences.Get("NumSerie", null) != null && Preferences.Get("Correo", null) != null)
-            {
-                Pagina.IsVisible = true;
-                Aviso.IsVisible = false;
-            }
-        }
+        //public void VerificarPreferences()
+        //{
+        //    if (Preferences.Get("NumSerie", null) != null && Preferences.Get("Correo", null) != null)
+        //    {
+        //        Pagina.IsVisible = true;
+        //        Aviso.IsVisible = false;
+        //    }
+        //}
 
         public async Task<bool> SubirAccionHistorial(string Accion)
         {
@@ -211,9 +309,11 @@ namespace ReactorMaui.Pages
 
                 if (estatusPrivada.Estatus && contra.Contra == Preferences.Get("Contraseña", null) && bandera)
                 {
-                    var data = new Dictionary<string, string>
+                    HistorialModel historial = new HistorialModel
                     {
-                        { EpochToday.ToString(), Accion }
+                        Fecha = EpochToday,
+                        NumeroCasa = Preferences.Get("NumCasa", null),
+                        Observaciones = Accion
                     };
 
                     await CrossCloudFirestore
@@ -221,11 +321,9 @@ namespace ReactorMaui.Pages
                        .Instance
                        .Collection(Preferences.Get("NumSerie", null))
                        .Document("Usuarios")
-                       .Collection("Usuarios")
-                       .Document(Preferences.Get("NumCasa", null))
-                       .Collection("Casa")
-                       .Document("Historial")
-                       .SetAsync(data);
+                       .Collection("Historial")
+                       .AddAsync(historial);
+
                     //se sobre escribe en la base de datos
                     return true;
                 }

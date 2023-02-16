@@ -18,7 +18,7 @@ namespace ReactorMaui.Pages
 {
     public class AlarmaState
     {
-
+        public string AlarmaMensaje { get; set; }
     }
 
     public class Alarma: Component<AlarmaState>
@@ -30,59 +30,142 @@ namespace ReactorMaui.Pages
         {
 
             return new ContentPage("Alarma")
-            {
-                new StackLayout()
+            { 
+                new Grid("5*, 90*, 5*", "5*, 90*, 5*")
                 {
-                    new Label(lbl => Aviso = lbl)
-                        .Text("Favor de ingresar sus datos en el area de configuración")
-                        .IsVisible(true)
-                        .HCenter()
-                        .VCenter()
-                        .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Italic)
-                        .FontSize(20)
-                        .TextColor(Color.Parse("black"))
-                        .HorizontalTextAlignment(TextAlignment.Center)
-                        .IsVisible(false),
-
-                    new StackLayout(sl => Pagina = sl)
+                    new Grid("30*, 70*", "*")
                     {
-                        new Button("Pánico.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Una persona se encuentra en pánico")),
+                        new Frame()
+                        {
+                            new Grid("5*, 30*, 30*, 30*, 5*", "10*, 80*, 10*")
+                            {
+                                new Entry()
+                                    .Placeholder("Escriba el mensaje de alerta")
+                                    .GridColumn(1)
+                                    .GridRow(1)
+                                    .TextColor(Color.Parse("black"))
+                                    .OnTextChanged(text => SetState(s => s.AlarmaMensaje = text))
+                                    .VCenter(),
 
-                        new Button("Avistamiento de ladron.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Acabo de ver a un ladrón.")),
+                                new Button()
+                                    .Text("Enviar mensaje y activar alarma")
+                                    .GridColumn(1)
+                                    .GridRow(2)
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion(State.AlarmaMensaje);
+                                        ActivaroDesactivarAlarma(true);
+                                    }),
 
-                        new Button("Roban carro.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Se estan robando un carro.")),
+                                new Button()
+                                    .Text("Enviar mensaje sin activar alarma")
+                                    .GridColumn(1)
+                                    .GridRow(3)
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion(State.AlarmaMensaje);
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                            }
+                        }
+                        .GridColumn(0)
+                        .GridRow(0)
+                        .BorderColor(Color.Parse("black")),
 
-                        new Button("Asalto.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Estan asaltando a alguien.")),
+                        new Frame()
+                        {
+                            new Grid("25*, 25*, 25*, 25*", "50*, 50*")
+                            {
+                                new ImageButton("ayuda.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() => {
+                                        EnviarNotificacion(State.AlarmaMensaje);
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridColumn(0)
+                                    .GridRow(0)
+                                    .Margin(5),
 
-                        new Button("Roban casa.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Un ladrón esta robando una casa.")),
+                                new ImageButton("ver_ladron.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion("Acabo de ver a un ladrón.");
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridColumn(0)
+                                    .GridRow(1)
+                                    .Margin(5),
 
-                        new Button("Ambulancia.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(() => EnviarNotificacion("Se necesita asistencia medica.")),
+                                new ImageButton("ladron_auto.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion("Se estan robando un carro.");
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridColumn(0)
+                                    .GridRow(2)
+                                    .Margin(5),
 
-                        new Button("Apagar alarma.")
-                            .HCenter()
-                            .VCenter()
-                            .OnClicked(DesactivarAlarma)
+                                new ImageButton("ladron_robando.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion("Estan asaltando a alguien.");
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridRow(0)
+                                    .GridColumn(1)
+                                    .Margin(5),
 
+                                new ImageButton("ladron_casa.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion("Un ladrón esta robando una casa.");
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridColumn(1)
+                                    .GridRow(1)
+                                    .Margin(5),
+
+                                new ImageButton("emergencia.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        EnviarNotificacion("Se necesita asistencia medica.");
+                                        ActivaroDesactivarAlarma(true);
+                                    })
+                                    .GridColumn(1)
+                                    .GridRow(2)
+                                    .Margin(5),
+
+                                new ImageButton("alarma_desactivar.png")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() => ActivaroDesactivarAlarma(false))
+                                    .GridRow(3)
+                                    .GridColumnSpan(2)
+                                    .Margin(5)
+                            }
+                        }
+                        .GridColumn(0)
+                        .GridRow(1)
+                        .BorderColor(Color.Parse("black"))
                     }
-                    .IsVisible(true)
+                    .GridRow(1)
+                    .GridColumn(1)
+                    .ColumnSpacing(10)
+                    .RowSpacing(10)
                 }
                 .HCenter()
                 .VCenter()
@@ -163,7 +246,7 @@ namespace ReactorMaui.Pages
 
             PushNotificationRequest notificacion = new PushNotificationRequest()
             {
-                to = $"/topics/{ Preferences.Get("NumSerie", null)}",
+                to = $"/topics/{Preferences.Get("NumSerie", null)}",
                 notification = new NotificationMessageBody()
                 {
                     title = "¡ALERTA!",
@@ -175,17 +258,17 @@ namespace ReactorMaui.Pages
 
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("key", "=" + Constantes.Autorizacion);
-            
+
             string serializarRequest = JsonConvert.SerializeObject(notificacion);
             var response = await client.PostAsync(url, new StringContent(serializarRequest, Encoding.UTF8, "application/json"));
 
-            if(response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 Alerta.DesplegarAlerta("Alerta enviada.");
             }
         }
 
-        public async void DesactivarAlarma()
+        public async void ActivaroDesactivarAlarma(bool Alarma)
         {
             IFirebaseConfig config = new FirebaseConfig
             {
@@ -197,7 +280,7 @@ namespace ReactorMaui.Pages
 
             FirebaseResponse res = await client.GetAsync("NumSerie");
             Actores actores = res.ResultAs<Actores>();
-            actores.Alarma = false;
+            actores.Alarma = Alarma;
             await client.UpdateAsync("NumSerie", actores);
         }
     }

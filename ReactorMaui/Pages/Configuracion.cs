@@ -38,69 +38,137 @@ namespace ReactorMaui.Pages
 
             return new ContentPage("Configuracion")
             {
-                new StackLayout()
+                new Grid("5*,90*,5*", "10*,80*,10")
                 {
-                    new Picker()
-                        .ItemsSource(State.Casas)
-                        .Title("Selecciona una casa")
-                        .HCenter()
-                        .VCenter()
-                        .OnSelectedIndexChanged(selected => SetState(s => s.SelectedIndex = selected)),
-
-                    new Entry()
-                        .Placeholder("Correo electronico")
-                        .HCenter()
-                        .VCenter()
-                        .OnTextChanged(text => SetState(s => s.Correo = text)),
-
-                    new Button(btn => BotonEnviarVerificacion = btn)
-                        .Text("Enviar codigo de verificación")
-                        .HCenter()
-                        .VCenter()
-                        .OnClicked(() =>
+                    new Grid("50*,50*","*")
+                    {
+                        new Frame()
                         {
-                            BotonEnviarVerificacion.IsEnabled = false;
-                            BotonVerificar.IsEnabled = true;
-                            Correo.Enviar(State.Correo, "Codigo de verificación", CrearCodigo());      
-                        }),
+                            new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
+                            {
+                                new Label()
+                                    .Text("Validación del correo electronico")
+                                    .HCenter()
+                                    .VCenter()
+                                    .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                    .GridRow(1)
+                                    .GridColumn(1)
+                                    .FontSize(15)
+                                    .HorizontalTextAlignment(TextAlignment.Center),
 
-                    new Entry()
-                        .Placeholder("Codigo de verificacón")
-                        .HCenter()
-                        .VCenter()
-                        .OnTextChanged(text => SetState(s => s.CodigoVerificación = text)),
 
-                    new Button(btn => BotonVerificar = btn)
-                        .Text("Verificar codigo")
-                        .HCenter()
-                        .VCenter()
-                        .IsEnabled(false)
-                        .OnClicked(() =>
-                        {      
-                            BotonVerificar.IsEnabled = false;
-                            VerificarCodigo();
-                        }),
+                                new Entry()
+                                    .Placeholder("Correo electronico")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnTextChanged(text => SetState(s => s.Correo = text))
+                                    .GridRow(2)
+                                    .GridColumn(1),
 
-                    new Entry()
-                        .Placeholder("Numero de serie")
-                        .HCenter()
-                        .VCenter()
-                        .OnTextChanged(text => SetState(s => s.NumSerie = text)),
+                                new Button(btn => BotonEnviarVerificacion = btn)
+                                    .Text("Enviar codigo de verificación")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnClicked(() =>
+                                    {
+                                        BotonEnviarVerificacion.IsEnabled = false;
+                                        BotonVerificar.IsEnabled = true;
+                                        Correo.Enviar(State.Correo, "Codigo de verificación", CrearCodigo());
+                                    })
+                                    .GridRow(3)
+                                    .GridColumn(1),
 
-                    new Entry()
-                        .Placeholder("Contraseña")
-                        .HCenter()
-                        .VCenter()
-                        .OnTextChanged(text => SetState(s => s.Contra = text)),
+                                new Entry()
+                                    .Placeholder("Codigo de verificacón")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnTextChanged(text => SetState(s => s.CodigoVerificación = text))
+                                    .GridRow(4)
+                                    .GridColumn(1),
 
-                    new Button(btn => BotonBloqueado = btn)
-                        .Text("Botton bloqueado")
-                        .HCenter()
-                        .VCenter()
-                        .VCenter()
-                        .IsEnabled(false)
-                        .OnClicked(RegistrarAplicacion)
+                                new Button(btn => BotonVerificar = btn)
+                                    .Text("Verificar codigo")
+                                    .HCenter()
+                                    .VCenter()
+                                    .IsEnabled(false)
+                                    .OnClicked(() =>
+                                    {
+                                        BotonVerificar.IsEnabled = false;
+                                        VerificarCodigo();
+                                    })
+                                    .GridRow(5)
+                                    .GridColumn(1)
+                            }
+                            .RowSpacing(10)
+                            .ColumnSpacing(10)
+                        }
+                        .GridColumn(0)
+                        .GridRow(0)
+                        .BorderColor(Color.Parse("black")),
+                        
+                        new Frame()
+                        {
+                            new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
+                            {
+                                new Label()
+                                    .Text("Validación de datos de la casa")
+                                    .HCenter()
+                                    .VCenter()
+                                    .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                    .GridRow(1)
+                                    .GridColumn(1)
+                                    .FontSize(15)
+                                    .HorizontalTextAlignment(TextAlignment.Center),
+
+                                new Picker()
+                                    .ItemsSource(State.Casas)
+                                    .Title("Selecciona una casa")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnSelectedIndexChanged(selected => SetState(s => s.SelectedIndex = selected))
+                                    .GridRow(2)
+                                    .GridColumn(1),
+
+                                new Entry()
+                                    .Placeholder("Numero de serie")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnTextChanged(text => SetState(s => s.NumSerie = text))
+                                    .GridRow(3)
+                                    .GridColumn(1),
+
+                                new Entry()
+                                    .Placeholder("Contraseña")
+                                    .HCenter()
+                                    .VCenter()
+                                    .OnTextChanged(text => SetState(s => s.Contra = text))
+                                    .GridRow(4)
+                                    .GridColumn(1),
+
+                                new Button(btn => BotonBloqueado = btn)
+                                    .Text("Aplicación habilitada")
+                                    .HCenter()
+                                    .VCenter()
+                                    .VCenter()
+                                    .IsEnabled(false)
+                                    .OnClicked(RegistrarAplicacion)
+                                    .GridRow(5)
+                                    .GridColumn(1),
+                            }
+                            .RowSpacing(10)
+                            .ColumnSpacing(10)
+                        }   
+                        .GridColumn(0)
+                        .GridRow(1)
+                        .BorderColor(Color.Parse("black"))
+                    }
+                    .GridRow(1)
+                    .GridColumn(1)
+                    .ColumnSpacing(10)
+                    .RowSpacing(10)
                 }
+                .HCenter()
+                .VCenter()
             };
         }
         public void InicializarCasas()
@@ -156,15 +224,32 @@ namespace ReactorMaui.Pages
                                     .Document("Contra")
                                     .GetAsync();
 
-                await CrossCloudFirestore
-                    .Current
-                    .Instance
-                    .Collection(State.NumSerie)
-                    .Document("Usuarios")
-                    .Collection("Usuarios")
-                    .Document(IndexCasa)
-                    .Collection("Casa")
-                    .AddAsync(new CorreoModel { Correo = State.Correo, Estatus = true });
+                var documentCasa = await CrossCloudFirestore
+                                         .Current
+                                         .Instance
+                                         .Collection(State.NumSerie)
+                                         .Document("Usuarios")
+                                         .Collection("Usuarios")
+                                         .Document(IndexCasa)
+                                         .Collection("Casa")
+                                         .GetAsync();
+
+                bool bandera = true;
+                documentCasa.Documents.ToList().ForEach(document =>
+                {
+                    try
+                    {
+                        CorreoModel correo = document.ToObject<CorreoModel>();
+                        if (correo.Correo.Trim() == Preferences.Get("Correo", null))
+                        {
+                            bandera = true;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                });
 
                 ContraModel contra = documentContra.ToObject<ContraModel>();
 
@@ -172,6 +257,21 @@ namespace ReactorMaui.Pages
                 {
                     Alerta.DesplegarAlerta("Contraseña incorrecta");
                     return;
+                }
+
+
+                if(bandera == false)
+                {
+                    await CrossCloudFirestore
+                                       .Current
+                                       .Instance
+                                       .Collection(State.NumSerie)
+                                       .Document("Usuarios")
+                                       .Collection("Usuarios")
+                                       .Document(IndexCasa)
+                                       .Collection("Casa")
+                                       .AddAsync(new CorreoModel { Correo = State.Correo, Estatus = true });
+
                 }
 
                 Alerta.DesplegarAlerta("Aplicación habilitada");
