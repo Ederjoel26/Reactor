@@ -29,7 +29,7 @@ namespace ReactorMaui.Pages
         public override VisualNode Render()
         {
 
-            return new ContentPage("Alarma")
+            return new ContentPage("Alertas")
             { 
                 new Grid("5*, 90*, 5*", "5*, 90*, 5*")
                 {
@@ -43,6 +43,8 @@ namespace ReactorMaui.Pages
                                     .Placeholder("Escriba el mensaje de alerta")
                                     .GridColumn(1)
                                     .GridRow(1)
+                                    .HCenter()
+                                    .HFill()
                                     .TextColor(Color.Parse("black"))
                                     .OnTextChanged(text => SetState(s => s.AlarmaMensaje = text))
                                     .VCenter(),
@@ -54,6 +56,13 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnClicked(() =>
                                     {
+
+                                        if(State.AlarmaMensaje == null)
+                                        {
+                                            Alerta.DesplegarAlerta("Favor de escribir el mensaje de alerta.");
+                                            return;
+                                        }
+
                                         EnviarNotificacion(State.AlarmaMensaje);
                                         ActivaroDesactivarAlarma(true);
                                     }),
@@ -65,10 +74,16 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnClicked(() =>
                                     {
+                                        if(State.AlarmaMensaje == null)
+                                        {
+                                            Alerta.DesplegarAlerta("Favor de escribir el mensaje de alerta.");
+                                            return;
+                                        }
                                         EnviarNotificacion(State.AlarmaMensaje);
-                                        ActivaroDesactivarAlarma(true);
                                     })
                             }
+                            .RowSpacing(5)
+                            .ColumnSpacing(5)
                         }
                         .GridColumn(0)
                         .GridRow(0)
@@ -82,7 +97,7 @@ namespace ReactorMaui.Pages
                                     .HCenter()
                                     .VCenter()
                                     .OnClicked(() => {
-                                        EnviarNotificacion(State.AlarmaMensaje);
+                                        EnviarNotificacion("Necesito ayuda urgentemente.");
                                         ActivaroDesactivarAlarma(true);
                                     })
                                     .GridColumn(0)
@@ -106,7 +121,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnClicked(() =>
                                     {
-                                        EnviarNotificacion("Se estan robando un carro.");
+                                        EnviarNotificacion("Se están robando un carro.");
                                         ActivaroDesactivarAlarma(true);
                                     })
                                     .GridColumn(0)
@@ -118,7 +133,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnClicked(() =>
                                     {
-                                        EnviarNotificacion("Estan asaltando a alguien.");
+                                        EnviarNotificacion("Están asaltando a alguien.");
                                         ActivaroDesactivarAlarma(true);
                                     })
                                     .GridRow(0)
@@ -169,107 +184,32 @@ namespace ReactorMaui.Pages
                 }
                 .HCenter()
                 .VCenter()
-            };
+            }
+            .BackgroundImageSource("fondo_alertas.png");
         }
 
         public async void EnviarNotificacion(string Mensaje)
         {
-            try
+            bool estaRegistrado = await Permisos.VerificarRegistro();
+
+            if(!estaRegistrado)
             {
-                var documentPrivada = await CrossCloudFirestore
-                                        .Current
-                                        .Instance
-                                        .Collection(Preferences.Get("NumSerie", null))
-                                        .Document("Estatus")
-                                        .GetAsync();
-
-                var documentContra = await CrossCloudFirestore
-                                        .Current
-                                        .Instance
-                                        .Collection(Preferences.Get("NumSerie", null))
-                                        .Document("Contra")
-                                        .GetAsync();
-
-                var documentCasa = await CrossCloudFirestore
-                                        .Current
-                                        .Instance
-                                        .Collection(Preferences.Get("NumSerie", null))
-                                        .Document("Usuarios")
-                                        .Collection("Usuarios")
-                                        .Document(Preferences.Get("NumCasa", null))
-                                        .Collection("Casa")
-                                        .GetAsync();
-
-                EstatusModel estatusPrivada = documentPrivada.ToObject<EstatusModel>();
-                ContraModel contra = documentContra.ToObject<ContraModel>();
-
-                bool bandera = false;
-                documentCasa.Documents.ToList().ForEach(document =>
-                {
-                    try
-                    {
-                        CorreoModel correo = document.ToObject<CorreoModel>();
-                        if (correo.Correo.Trim() == Preferences.Get("Correo", null) && correo.Estatus)
-                        {
-                            bandera = true;
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                });
-
-                if (!estatusPrivada.Estatus)
-                {
-                    Alerta.DesplegarAlerta("La privada no está habilitada.");
-                    return;
-                }
-
-                if(contra.Contra != Preferences.Get("Contraseña", null))
-                {
-                    Alerta.DesplegarAlerta("La contraseña es incorrecta.");
-                    return;
-                }
-
-                if (!bandera)
-                {
-                    Alerta.DesplegarAlerta("El correo no es valido o no está habilitado");
-                    return;
-                }
-            }
-            catch(Exception ex)
-            {
-                Alerta.DesplegarAlerta("Aun no esta registrado en la aplicación, vaya al apartado de configuración.");
-                return;
+                return; 
             }
 
-            PushNotificationRequest notificacion = new PushNotificationRequest()
-            {
-                to = $"/topics/{Preferences.Get("NumSerie", null)}",
-                notification = new NotificationMessageBody()
-                {
-                    title = "¡ALERTA!",
-                    body = Mensaje
-                }
-            };
-
-            string url = "https://fcm.googleapis.com/fcm/send";
-
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("key", "=" + Constantes.Autorizacion);
-
-            string serializarRequest = JsonConvert.SerializeObject(notificacion);
-            var response = await client.PostAsync(url, new StringContent(serializarRequest, Encoding.UTF8, "application/json"));
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                Alerta.DesplegarAlerta("Alerta enviada.");
-            }
+            Notificaciones.MandarNotificacion("¡ALERTA!", Mensaje);
+            Alerta.DesplegarAlerta("Mensaje enviado.");
         }
 
         public async void ActivaroDesactivarAlarma(bool Alarma)
         {
+            bool estaRegistrado = await Permisos.VerificarRegistro();
+
+            if (!estaRegistrado)
+            {
+                return;
+            }
+
             IFirebaseConfig config = new FirebaseConfig
             {
                 AuthSecret = Constantes.AuthSecretRealtime,
@@ -282,6 +222,9 @@ namespace ReactorMaui.Pages
             Actores actores = res.ResultAs<Actores>();
             actores.Alarma = Alarma;
             await client.UpdateAsync("NumSerie", actores);
+            string mensaje = Alarma ? "Se activó la alarma." : "Se desactivó la alarma.";
+            Auditoria.SubirAccionHistorial(mensaje);
+            Alerta.DesplegarAlerta(mensaje);
         }
     }
 }

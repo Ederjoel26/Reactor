@@ -12,12 +12,11 @@ namespace ReactorMaui.Models
     {
         public static bool Enviar(string Correo, string Asunto, string Codigo)
         {
-            string From = "privadasverificacion500@hotmail.com";
             try
             {
                 MailMessage mail = new MailMessage
                 {
-                    From = new MailAddress(From, "Codigo de verificación"),
+                    From = new MailAddress(Constantes.Correo, "Codigo de verificación"),
                     Subject = Asunto,
                     IsBodyHtml = true,
                     Body = $"<center><h1>{ Codigo }</h1></center>"
@@ -27,7 +26,7 @@ namespace ReactorMaui.Models
 
                 SmtpClient client = new SmtpClient("smtp.office365.com", 587)
                 {
-                    Credentials = new NetworkCredential(From, "Mailo100"),
+                    Credentials = new NetworkCredential(Constantes.Correo, Constantes.Contra),
                     EnableSsl = true
                 };
            

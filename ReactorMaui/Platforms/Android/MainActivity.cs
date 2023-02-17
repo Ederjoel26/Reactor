@@ -18,7 +18,7 @@ namespace ReactorMaui
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            Window.SetStatusBarColor(Android.Graphics.Color.Rgb(0, 0, 0));
+            Window.SetStatusBarColor(Android.Graphics.Color.Rgb(255, 189, 47));
 
             if (Intent.Extras != null)
             {

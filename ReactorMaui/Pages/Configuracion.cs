@@ -32,17 +32,19 @@ namespace ReactorMaui.Pages
         public MauiControls.Button BotonVerificar;
         public MauiControls.Button BotonBloqueado;
         public MauiControls.Button BotonEnviarVerificacion;
+        public MauiControls.Frame FrameUno;
+        public MauiControls.Frame FrameDos;
         public override VisualNode Render()
         {
             InicializarCasas();
 
-            return new ContentPage("Configuracion")
+            return new ContentPage("Configuración")
             {
                 new Grid("5*,90*,5*", "10*,80*,10")
                 {
                     new Grid("50*,50*","*")
                     {
-                        new Frame()
+                        new Frame(f => FrameUno = f)
                         {
                             new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
                             {
@@ -56,14 +58,15 @@ namespace ReactorMaui.Pages
                                     .FontSize(15)
                                     .HorizontalTextAlignment(TextAlignment.Center),
 
-
                                 new Entry()
                                     .Placeholder("Correo electronico")
                                     .HCenter()
                                     .VCenter()
+                                    .HFill()
                                     .OnTextChanged(text => SetState(s => s.Correo = text))
                                     .GridRow(2)
-                                    .GridColumn(1),
+                                    .GridColumn(1) 
+                                    .TextColor(Color.Parse("black")),
 
                                 new Button(btn => BotonEnviarVerificacion = btn)
                                     .Text("Enviar codigo de verificación")
@@ -71,6 +74,20 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnClicked(() =>
                                     {
+                                        if(State.Correo == null)
+                                        {
+                                            Alerta.DesplegarAlerta("Favor de llenar el campo solicitado.");
+                                            return;
+                                        }
+
+                                        if (Preferences.Get("NumSerie", null) != null 
+                                            || Preferences.Get("Correo", null) != null 
+                                            || Preferences.Get("NumCasa", null) != null 
+                                            || Preferences.Get("Contraseña", null) != null)
+                                        {
+                                            Alerta.DesplegarAlerta("Usted ya ha sido registrado.");
+                                            return;
+                                        }
                                         BotonEnviarVerificacion.IsEnabled = false;
                                         BotonVerificar.IsEnabled = true;
                                         Correo.Enviar(State.Correo, "Codigo de verificación", CrearCodigo());
@@ -82,9 +99,11 @@ namespace ReactorMaui.Pages
                                     .Placeholder("Codigo de verificacón")
                                     .HCenter()
                                     .VCenter()
+                                    .HFill()
                                     .OnTextChanged(text => SetState(s => s.CodigoVerificación = text))
                                     .GridRow(4)
-                                    .GridColumn(1),
+                                    .GridColumn(1)
+                                    .TextColor(Color.Parse("black")),
 
                                 new Button(btn => BotonVerificar = btn)
                                     .Text("Verificar codigo")
@@ -99,14 +118,14 @@ namespace ReactorMaui.Pages
                                     .GridRow(5)
                                     .GridColumn(1)
                             }
-                            .RowSpacing(10)
-                            .ColumnSpacing(10)
+                            .RowSpacing(7)
+                            .ColumnSpacing(7)
                         }
                         .GridColumn(0)
                         .GridRow(0)
                         .BorderColor(Color.Parse("black")),
                         
-                        new Frame()
+                        new Frame(f => FrameDos = f)
                         {
                             new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
                             {
@@ -125,6 +144,7 @@ namespace ReactorMaui.Pages
                                     .Title("Selecciona una casa")
                                     .HCenter()
                                     .VCenter()
+                                    .HFill()
                                     .OnSelectedIndexChanged(selected => SetState(s => s.SelectedIndex = selected))
                                     .GridRow(2)
                                     .GridColumn(1),
@@ -132,10 +152,12 @@ namespace ReactorMaui.Pages
                                 new Entry()
                                     .Placeholder("Numero de serie")
                                     .HCenter()
+                                    .HFill()
                                     .VCenter()
                                     .OnTextChanged(text => SetState(s => s.NumSerie = text))
                                     .GridRow(3)
-                                    .GridColumn(1),
+                                    .GridColumn(1)
+                                    .TextColor(Color.Parse("black")),
 
                                 new Entry()
                                     .Placeholder("Contraseña")
@@ -143,12 +165,13 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnTextChanged(text => SetState(s => s.Contra = text))
                                     .GridRow(4)
-                                    .GridColumn(1),
+                                    .GridColumn(1)
+                                    .TextColor(Color.Parse("black"))
+                                    .HFill(),
 
                                 new Button(btn => BotonBloqueado = btn)
-                                    .Text("Aplicación habilitada")
+                                    .Text("Habilitar aplicación")
                                     .HCenter()
-                                    .VCenter()
                                     .VCenter()
                                     .IsEnabled(false)
                                     .OnClicked(RegistrarAplicacion)
@@ -169,7 +192,8 @@ namespace ReactorMaui.Pages
                 }
                 .HCenter()
                 .VCenter()
-            };
+            }
+            .BackgroundImageSource("fondo_configuracion");
         }
         public void InicializarCasas()
         {
@@ -205,7 +229,7 @@ namespace ReactorMaui.Pages
             string IndexCasa = "";
             try
             {
-                if (State.NumSerie == string.Empty || State.Contra == string.Empty || State.SelectedIndex == null)
+                if (State.NumSerie == null || State.Contra == null || State.SelectedIndex == null)
                 {
                     Alerta.DesplegarAlerta("Favor de llenar todos los datos solicitados");
                     return;
