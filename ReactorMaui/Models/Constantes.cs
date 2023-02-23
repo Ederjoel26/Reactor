@@ -8,10 +8,10 @@ namespace ReactorMaui.Models
 {
     public static class Constantes
     {
-        public static string Autorizacion = "AAAA3TOKQOc:APA91bGhWkMELN2NwwzJviEnoHUT4t04LIz6irehgrcXBkJnXmt6D2KDQUb7hOxJcWolYoLfFz5n7iPSzTYh6TNaEUOn3haxJgxYRMiZmu0UblaGjes4__nQIHKvl1a8cSztdHbvMyCH";
-        public static string BasePathRealtime = "https://test-callback-608b0-default-rtdb.firebaseio.com/";
-        public static string AuthSecretRealtime = "AIzaSyARdR9FbgNnAZG1vm_Or1auejZ2arcPBII";
-        public static string Correo = "privadasverificacion500@hotmail.com";
+        public static string Autorizacion = "AAAACMm7vAQ:APA91bHPft8-mPyMRwb_c4BNYfiESGaNiSGVUdpjq8rZJIxXT-wqHRaPhdhC3QsknnVAtFDxa7fw9qZaHVUW_JaFPqLwo7MXLjYMp6m5QhH_520gmPuE5pfd9tU4EG4KvKBeFE3mfRDW";
+        public static string BasePathRealtime = "https://privadasiot-default-rtdb.firebaseio.com/";
+        public static string AuthSecretRealtime = "AIzaSyCZljDPJ3q6BdwSn1yz31z2aa3CrVtJKU4";
+        public static string Correo = "privadas.lot@outlook.com";
         public static string Contra = "Mailo100";
     }   
 }

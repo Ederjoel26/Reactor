@@ -167,7 +167,7 @@ namespace ReactorMaui.Pages
                                     .GridRow(1)
                                     .GridColumn(1)
                                     .BorderColor(Color.Parse("black"))
-                                }                                
+                                }
                             }
                             .BackgroundImageSource("fondo_mainpage.png")
                         },
@@ -177,15 +177,16 @@ namespace ReactorMaui.Pages
                             new Alarma()
                         },
 
-                        new Tab("HISTORIAL", "historial.png")
-                        {
-                            new Historial()
-                        },
-
                         new Tab("CONFIGURACIÓN", "configuracion.png")
                         {
                             new Configuracion()
-                        }
+                        },
+
+                        new Tab("ADMINISTRADOR", "administrador.png")
+                        {
+                            new Administrador()
+                        },
+
                     }
                 }
             };
@@ -210,7 +211,7 @@ namespace ReactorMaui.Pages
 
             IFirebaseClient client = new FirebaseClient(config);
 
-            FirebaseResponse res = await client.GetAsync("NumSerie");
+            FirebaseResponse res = await client.GetAsync(Preferences.Get("NumSerie", null));
             Actores actores = res.ResultAs<Actores>();
 
             string Mensaje = string.Empty;
@@ -239,29 +240,9 @@ namespace ReactorMaui.Pages
                     break;
             }
 
-            await client.UpdateAsync("NumSerie", actores);
+            await client.UpdateAsync(Preferences.Get("NumSerie", null), actores);
 
             Auditoria.SubirAccionHistorial(Mensaje);
-
-            Thread.Sleep(2000);
-
-            switch (Campo)
-            {
-                case "Vehicular":
-                    actores.Vehicular = !Valor;
-                    break;
-                case "Peatonal":
-                    actores.Peatonal = !Valor;
-                    break;
-                case "Basura1":
-                    actores.Basura1 = !Valor;
-                    break;
-                case "Basura2":
-                    actores.Basura2 = !Valor;
-                    break;
-            }
-
-            await client.UpdateAsync("NumSerie", actores);
         }
     }
 }

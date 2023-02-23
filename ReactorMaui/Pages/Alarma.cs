@@ -218,10 +218,10 @@ namespace ReactorMaui.Pages
 
             IFirebaseClient client = new FirebaseClient(config);
 
-            FirebaseResponse res = await client.GetAsync("NumSerie");
+            FirebaseResponse res = await client.GetAsync(Preferences.Get("NumSerie", null));
             Actores actores = res.ResultAs<Actores>();
             actores.Alarma = Alarma;
-            await client.UpdateAsync("NumSerie", actores);
+            await client.UpdateAsync(Preferences.Get("NumSerie", null), actores);
             string mensaje = Alarma ? "Se activó la alarma." : "Se desactivó la alarma.";
             Auditoria.SubirAccionHistorial(mensaje);
             Alerta.DesplegarAlerta(mensaje);

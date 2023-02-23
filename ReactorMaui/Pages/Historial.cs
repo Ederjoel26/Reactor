@@ -93,7 +93,7 @@ namespace ReactorMaui.Pages
             var documentHistorial = await CrossCloudFirestore
                                         .Current
                                         .Instance
-                                        .Collection("NumSerie")
+                                        .Collection(Preferences.Get("NumSerie", null))
                                         .Document("Usuarios")
                                         .Collection("Historial")
                                         .GetAsync();
@@ -105,7 +105,9 @@ namespace ReactorMaui.Pages
                 HistorialModel registro = document.ToObject<HistorialModel>();
                 if (registro.Fecha >= Fecha && registro.Fecha <= FechaLimiteDia)
                 {
-                    SetState(s => s.historialList.Add($"Casa {registro.NumeroCasa}, {registro.Observaciones}"));
+                    string fechaAccion = EpochConvertidor.EpochToHour(registro.Fecha);
+
+                    SetState(s => s.historialList.Add($"{fechaAccion} Casa: {registro.NumeroCasa}, {registro.Observaciones}"));
                 }
             });
 

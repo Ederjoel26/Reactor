@@ -240,6 +240,10 @@ namespace ReactorMaui.Pages
                 {
                     IndexCasa = "0" + State.SelectedIndex;
                 }
+                else
+                {
+                    IndexCasa = State.SelectedIndex.ToString();
+                }
 
                 var documentContra = await CrossCloudFirestore
                                     .Current
@@ -258,7 +262,8 @@ namespace ReactorMaui.Pages
                                          .Collection("Casa")
                                          .GetAsync();
 
-                bool bandera = true;
+                bool bandera = false;
+                bool banderaEstatus = false;
                 documentCasa.Documents.ToList().ForEach(document =>
                 {
                     try
@@ -271,7 +276,7 @@ namespace ReactorMaui.Pages
                     }
                     catch
                     {
-
+                        banderaEstatus = true;
                     }
                 });
 
@@ -284,7 +289,7 @@ namespace ReactorMaui.Pages
                 }
 
 
-                if(bandera == false)
+                if(!bandera)
                 {
                     await CrossCloudFirestore
                                        .Current
@@ -296,6 +301,19 @@ namespace ReactorMaui.Pages
                                        .Collection("Casa")
                                        .AddAsync(new CorreoModel { Correo = State.Correo, Estatus = true });
 
+                }
+
+                if (!banderaEstatus)
+                {
+                    await CrossCloudFirestore
+                                        .Current
+                                        .Instance
+                                        .Collection(State.NumSerie)
+                                        .Document("Usuarios")
+                                        .Collection("Usuarios")
+                                        .Document(IndexCasa)
+                                        .Collection("Casa")
+                                        .AddAsync(new EstatusModel { Estatus = true });
                 }
 
                 Alerta.DesplegarAlerta("Aplicación habilitada");
