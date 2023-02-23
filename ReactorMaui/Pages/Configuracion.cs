@@ -199,7 +199,14 @@ namespace ReactorMaui.Pages
         {
             for (int i = 1; i <= 100; i++)
             {
-                SetState(s => s.Casas.Add($"Casa { i }"));
+                if(i > 0 && i < 10)
+                {
+                    SetState(s => s.Casas.Add($"Casa 0{ i }"));
+                }
+                else
+                {
+                    SetState(s => s.Casas.Add($"Casa {i}"));
+                }
             }
         }
 
@@ -269,7 +276,7 @@ namespace ReactorMaui.Pages
                     try
                     {
                         CorreoModel correo = document.ToObject<CorreoModel>();
-                        if (correo.Correo.Trim() == Preferences.Get("Correo", null))
+                        if (correo.Correo.Trim() == State.Correo.Trim())
                         {
                             bandera = true;
                         }

@@ -17,56 +17,67 @@ namespace ReactorMaui.Pages
     {
         public List<string> ListCasas { get; set; } = new List<string>();
         public ObservableCollection<string> Correos { get; set; } = new ObservableCollection<string>();
-        public bool CasaActiva { get; set; }
         public string IndexCasa { get; set; }
     }
     public class DesactivarCorreo : Component<DesactivarState>
     {
         public MauiControls.Picker pCasas { get; set; }
         public MauiControls.ListView lvCorreos { get; set; }    
+        public MauiControls.Switch swCasaActiva { get; set; }
+        public static MauiControls.ContentPage cpDesactivarUsuario { get; set; }
         public override VisualNode Render()
         {
-            return new ContentPage()
+            return new ContentPage(cp => cpDesactivarUsuario = cp)
             {
                 new Grid("5*,90*,5*", "10*, 80*, 10*")
                 {
                     new Frame()
                     {
-                        new Grid("20*, 60*, 20*", "70*, 30*")
+                        new Grid("10*, 10*, 60*, 20*", "70*, 30*")
                         {
+                            new Label("Actualizar correo")
+                                .HCenter()
+                                .VCenter()
+                                .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
+                                .FontSize(17)
+                                .GridColumnSpan(2)
+                                .GridRow(0),
+                                
+
                             new Picker(p => pCasas = p)
                                 .Title("Selecciona una casa")
                                 .ItemsSource(State.ListCasas)
                                 .OnLoaded(LlenarPickerCasas)
                                 .OnSelectedIndexChanged(ItemSeleccionado)
-                                .GridRow(0)
+                                .GridRow(1)
                                 .GridColumn(0)
                                 .HFill()
                                 .VCenter(),
 
-                            new Switch()
-                                .IsToggled(State.CasaActiva)
+                            new Switch(sw => swCasaActiva = sw)
                                 .HCenter()
                                 .VCenter()
                                 .GridColumn(1)
-                                .GridRow(0),
+                                .GridRow(1)
+                                .OnColor(Color.Parse("black")),
 
-                            new ScrollView()
+                            new Frame()
                             {
-                                new ListView(lv => lvCorreos = lv)
-                                    .ItemsSource(State.Correos)
-                                    .HCenter()
+                                new ScrollView()
+                                {
+                                    new ListView(lv => lvCorreos = lv)
+                                        .ItemsSource(State.Correos)
+                                }
                             }
-                            .HCenter()
-                            .VCenter()
-                            .GridRow(1) 
-                            .GridColumnSpan(2),
+                            .GridRow(2) 
+                            .GridColumnSpan(2)
+                            .BorderColor(Color.Parse("black")),
 
                             new Button("Guardar cambios")
                                 .HFill()
                                 .VCenter()
                                 .GridColumnSpan(2)
-                                .GridRow(2)
+                                .GridRow(3)
                                 .OnClicked(ActualizarItemSeleccioando)
                         }
                     }
@@ -74,7 +85,7 @@ namespace ReactorMaui.Pages
                     .GridColumn(1)
                     .BorderColor(Color.Parse("black"))
                 }
-            };
+            }.IsVisible(false);
         }
 
         public void LlenarPickerCasas()
@@ -136,6 +147,17 @@ namespace ReactorMaui.Pages
 
         public async void ActualizarItemSeleccioando()
         {
+            if (!await Permisos.VerificarRegistro())
+            {
+                return;
+            }
+
+            if(lvCorreos.SelectedItem == null)
+            {
+                Alerta.DesplegarAlerta("Selecciona un correo");
+                return;
+            }
+
             string id = string.Empty;
             CorreoModel correoCambiar = new CorreoModel();
 
@@ -165,11 +187,11 @@ namespace ReactorMaui.Pages
 
                 }
             });
-
-            correoCambiar.Estatus = State.CasaActiva;
-
             try
             {
+                correoCambiar.Estatus = swCasaActiva.IsToggled;
+
+            
                 await CrossCloudFirestore
                     .Current
                     .Instance

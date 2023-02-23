@@ -190,6 +190,7 @@ namespace ReactorMaui.Pages
                         new Tab("HISTORIAL")
                         {
                             new Historial()
+                            
                         },
 
                         new Tab("CORREO")

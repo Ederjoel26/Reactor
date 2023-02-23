@@ -22,11 +22,12 @@ namespace ReactorMaui.Pages
     }
     public class Historial : Component<HistorialState>
     {
+        public static MauiControls.ContentPage cpHistorial { get; set; }
         public MauiControls.DatePicker datePicker;
         public MauiControls.ListView listView;
         public override VisualNode Render()
         {
-            return new ContentPage("Historial")
+            return new ContentPage(cp => cpHistorial = cp)
             {
                 new Grid("5*, 90*, 5*", "5*, 90*, 5*")
                 {
@@ -73,6 +74,7 @@ namespace ReactorMaui.Pages
                     .RowSpacing(10)
                 }
             }
+            .IsVisible(false)
             .BackgroundImageSource("fondo_historial.png");
         }
 
