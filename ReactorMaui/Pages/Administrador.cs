@@ -110,29 +110,6 @@ namespace ReactorMaui.Pages
                         {
                             new Grid("20*, 40*, 40*", "*")
                             {
-                                new Label("Menu Administrador")
-                                    .HCenter()
-                                    .VCenter()
-                                    .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
-                                    .GridColumn(0)
-                                    .FontSize(18)
-                                    .GridRow(0),
-
-                                new Button("Desactivar casa o usuarios")
-                                    .HCenter()
-                                    .VCenter()
-                                    .HFill()
-                                    .GridColumn(0)
-                                    .GridRow(1)
-                                    .OnClicked(async () => await Navigation.PushAsync<Desactivar>()),
-
-                                new Button("Revisar historial")
-                                    .HCenter()
-                                    .VCenter()
-                                    .HFill()
-                                    .GridColumn(0)
-                                    .GridRow(2)
-                                    .OnClicked(async () => await Navigation.PushAsync<Historial>())
                             }
                             .RowSpacing(10)
                         }

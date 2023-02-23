@@ -299,7 +299,7 @@ namespace ReactorMaui.Pages
                                        .Collection("Usuarios")
                                        .Document(IndexCasa)
                                        .Collection("Casa")
-                                       .AddAsync(new CorreoModel { Correo = State.Correo, Estatus = true });
+                                       .AddAsync(new CorreoModel { Correo = State.Correo.Trim(), Estatus = true });
 
                 }
 

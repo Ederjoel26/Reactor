@@ -187,6 +187,20 @@ namespace ReactorMaui.Pages
                             new Administrador()
                         },
 
+                        new Tab("HISTORIAL")
+                        {
+                            new Historial()
+                        },
+
+                        new Tab("CORREO")
+                        {
+                            new DesactivarCorreo()
+                        },
+
+                        new Tab("CASAS")
+                        {
+                            new DesactivarCasa()
+                        }
                     }
                 }
             };

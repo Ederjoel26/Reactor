@@ -44,8 +44,8 @@ namespace ReactorMaui.Pages
                                     .VCenter(),
 
                                 new DatePicker(dp => datePicker = dp)
-                                    .OnLoaded(LlenarListView)
                                     .OnDateSelected(LlenarListView)
+                                    .OnLoaded(LlenarListView)
                                     .HCenter()
                                     .VCenter()
                                     .GridColumn(0)
