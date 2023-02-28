@@ -75,7 +75,8 @@ namespace ReactorMaui.Pages
                 }
             }
             .IsVisible(false)
-            .BackgroundImageSource("fondo_historial.png");
+            .BackgroundImageSource("fondo_historial.png")
+            .Title("Historial");
         }
 
         public async void LlenarListView()

@@ -46,7 +46,7 @@ namespace ReactorMaui.Pages
                     {
                         new Frame(f => FrameUno = f)
                         {
-                            new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
+                            new Grid("5*,18*,18*,18*,18*,18*,5*","*")
                             {
                                 new Label()
                                     .Text("Validación del correo electronico")
@@ -54,7 +54,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
                                     .GridRow(1)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                                     .FontSize(15)
                                     .HorizontalTextAlignment(TextAlignment.Center),
 
@@ -65,7 +65,7 @@ namespace ReactorMaui.Pages
                                     .HFill()
                                     .OnTextChanged(text => SetState(s => s.Correo = text))
                                     .GridRow(2)
-                                    .GridColumn(1) 
+                                    .GridColumn(0) 
                                     .TextColor(Color.Parse("black")),
 
                                 new Button(btn => BotonEnviarVerificacion = btn)
@@ -93,7 +93,7 @@ namespace ReactorMaui.Pages
                                         Correo.Enviar(State.Correo, "Codigo de verificación", CrearCodigo());
                                     })
                                     .GridRow(3)
-                                    .GridColumn(1),
+                                    .GridColumn(0),
 
                                 new Entry()
                                     .Placeholder("Codigo de verificacón")
@@ -102,7 +102,7 @@ namespace ReactorMaui.Pages
                                     .HFill()
                                     .OnTextChanged(text => SetState(s => s.CodigoVerificación = text))
                                     .GridRow(4)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                                     .TextColor(Color.Parse("black")),
 
                                 new Button(btn => BotonVerificar = btn)
@@ -116,7 +116,7 @@ namespace ReactorMaui.Pages
                                         VerificarCodigo();
                                     })
                                     .GridRow(5)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                             }
                             .RowSpacing(7)
                             .ColumnSpacing(7)
@@ -127,7 +127,7 @@ namespace ReactorMaui.Pages
                         
                         new Frame(f => FrameDos = f)
                         {
-                            new Grid("5*,18*,18*,18*,18*,18*,5*","10*,80*,10*")
+                            new Grid("5*,18*,18*,18*,18*,18*,5*","*")
                             {
                                 new Label()
                                     .Text("Validación de datos de la casa")
@@ -135,7 +135,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
                                     .GridRow(1)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                                     .FontSize(15)
                                     .HorizontalTextAlignment(TextAlignment.Center),
 
@@ -147,7 +147,7 @@ namespace ReactorMaui.Pages
                                     .HFill()
                                     .OnSelectedIndexChanged(selected => SetState(s => s.SelectedIndex = selected))
                                     .GridRow(2)
-                                    .GridColumn(1),
+                                    .GridColumn(0),
 
                                 new Entry()
                                     .Placeholder("Numero de serie")
@@ -156,7 +156,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnTextChanged(text => SetState(s => s.NumSerie = text))
                                     .GridRow(3)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                                     .TextColor(Color.Parse("black")),
 
                                 new Entry()
@@ -165,7 +165,7 @@ namespace ReactorMaui.Pages
                                     .VCenter()
                                     .OnTextChanged(text => SetState(s => s.Contra = text))
                                     .GridRow(4)
-                                    .GridColumn(1)
+                                    .GridColumn(0)
                                     .TextColor(Color.Parse("black"))
                                     .HFill(),
 
@@ -176,7 +176,7 @@ namespace ReactorMaui.Pages
                                     .IsEnabled(false)
                                     .OnClicked(RegistrarAplicacion)
                                     .GridRow(5)
-                                    .GridColumn(1),
+                                    .GridColumn(0),
                             }
                             .RowSpacing(10)
                             .ColumnSpacing(10)

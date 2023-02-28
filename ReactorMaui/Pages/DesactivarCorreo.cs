@@ -33,14 +33,14 @@ namespace ReactorMaui.Pages
                 {
                     new Frame()
                     {
-                        new Grid("10*, 10*, 60*, 20*", "70*, 30*")
+                        new Grid("10*, 10*, 80*", "*")
                         {
                             new Label("Actualizar correo")
                                 .HCenter()
                                 .VCenter()
                                 .FontAttributes(Microsoft.Maui.Controls.FontAttributes.Bold)
                                 .FontSize(17)
-                                .GridColumnSpan(2)
+                                .GridColumn(0)
                                 .GridRow(0),
                                 
 
@@ -54,12 +54,6 @@ namespace ReactorMaui.Pages
                                 .HFill()
                                 .VCenter(),
 
-                            new Switch(sw => swCasaActiva = sw)
-                                .HCenter()
-                                .VCenter()
-                                .GridColumn(1)
-                                .GridRow(1)
-                                .OnColor(Color.Parse("black")),
 
                             new Frame()
                             {
@@ -67,25 +61,24 @@ namespace ReactorMaui.Pages
                                 {
                                     new ListView(lv => lvCorreos = lv)
                                         .ItemsSource(State.Correos)
+                                        .GridColumn(0)
+                                        .GridRow(0)
+                                        .OnItemSelected(ActualizarItemSeleccioando)
                                 }
                             }
                             .GridRow(2) 
-                            .GridColumnSpan(2)
+                            .GridColumn(0)
                             .BorderColor(Color.Parse("black")),
-
-                            new Button("Guardar cambios")
-                                .HFill()
-                                .VCenter()
-                                .GridColumnSpan(2)
-                                .GridRow(3)
-                                .OnClicked(ActualizarItemSeleccioando)
                         }
                     }
                     .GridRow(1)
                     .GridColumn(1)
                     .BorderColor(Color.Parse("black"))
                 }
-            }.IsVisible(false);
+            }
+            .IsVisible(false)
+            .BackgroundImageSource("desactivar_usuarios.png")
+            .Title("Actualizar estatus");
         }
 
         public void LlenarPickerCasas()
@@ -126,9 +119,17 @@ namespace ReactorMaui.Pages
                 documentCorreos.Documents.ToList().ForEach(document =>
                 {
                     CorreoModel correo = document.ToObject<CorreoModel>();
-                    if(correo.Correo != null)
+                    if (correo.Correo != null)
                     {
-                        SetState(s => s.Correos.Add(correo.Correo));
+                        
+                        if (correo.Estatus)
+                        {
+                            SetState(s => s.Correos.Add($"Activo | {correo.Correo}"));
+                        }
+                        else
+                        {
+                            SetState(s => s.Correos.Add($"Inactivo | {correo.Correo}"));
+                        }
                     }
                 });
 
@@ -147,70 +148,76 @@ namespace ReactorMaui.Pages
 
         public async void ActualizarItemSeleccioando()
         {
-            if (!await Permisos.VerificarRegistro())
-            {
-                return;
-            }
-
-            if(lvCorreos.SelectedItem == null)
-            {
-                Alerta.DesplegarAlerta("Selecciona un correo");
-                return;
-            }
-
-            string id = string.Empty;
-            CorreoModel correoCambiar = new CorreoModel();
-
-            var documentCorreos = await CrossCloudFirestore
-                .Current
-                .Instance
-                .Collection(Preferences.Get("NumSerie", null))
-                .Document("Usuarios")
-                .Collection("Usuarios")
-                .Document(State.IndexCasa)
-                .Collection("Casa")
-                .GetAsync();
-
-            documentCorreos.Documents.ToList().ForEach(document =>
-            {
-                try
-                {
-                    CorreoModel correo = document.ToObject<CorreoModel>();
-                    if (correo.Correo.Trim() == lvCorreos.SelectedItem.ToString().Trim())
-                    {
-                        id = document.Id;
-                        correoCambiar = correo;
-                    }
-                }
-                catch
-                {
-
-                }
-            });
             try
             {
-                correoCambiar.Estatus = swCasaActiva.IsToggled;
+                string Item = lvCorreos.SelectedItem.ToString();
+                string CorreoDes = EliminarEstado(Item);
+                CorreoModel CorreoAux = new CorreoModel();
+                string Id = string.Empty;
+                var documentCasa = await CrossCloudFirestore
+                                         .Current
+                                         .Instance
+                                         .Collection(Preferences.Get("NumSerie", null))
+                                         .Document("Usuarios")
+                                         .Collection("Usuarios")
+                                         .Document(State.IndexCasa)
+                                         .Collection("Casa")
+                                         .GetAsync();
 
-            
+                documentCasa.Documents.ToList().ForEach(document =>
+                {
+                    try
+                    {
+                        CorreoModel correo = document.ToObject<CorreoModel>();
+                        if (correo.Correo.Trim() == CorreoDes.Trim())
+                        {
+                            CorreoAux = correo;
+                            Id = document.Id;
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                });
+
                 await CrossCloudFirestore
-                    .Current
-                    .Instance
-                    .Collection(Preferences.Get("NumSerie", null))
-                    .Document("Usuarios")
-                    .Collection("Usuarios")
-                    .Document(State.IndexCasa)
-                    .Collection("Casa")
-                    .Document(id)
-                    .SetAsync(correoCambiar);
-
-                Alerta.DesplegarAlerta("Cambios guardados correctamente");
-
+                                         .Current
+                                         .Instance
+                                         .Collection(Preferences.Get("NumSerie", null))
+                                         .Document("Usuarios")
+                                         .Collection("Usuarios")
+                                         .Document(State.IndexCasa)
+                                         .Collection("Casa")
+                                         .Document(Id)
+                                         .SetAsync(new CorreoModel { Correo = CorreoAux.Correo, Estatus = !CorreoAux.Estatus });
+                ItemSeleccionado();
             }
             catch
             {
-                Alerta.DesplegarAlerta("Algo salio mal, intentelo más tarde.");
+                Alerta.DesplegarAlerta("Algo salio mal, intentelo más tarde");
+            }
+            
+        }
+
+        public string EliminarEstado(string item)
+        {
+            
+            string Palabra = string.Empty;
+            string CorreoDes =  string.Empty;
+
+            for(int i = 0; i < 6; i++)
+            {
+                Palabra += item[i];
             }
 
+            int Inicial = (Palabra == "Activo") ? 9 : 11;
+            for (int i = Inicial; i < item.Length; i++)
+            {
+                CorreoDes += item[i];
+            }
+
+            return CorreoDes;
         }
     }
 }

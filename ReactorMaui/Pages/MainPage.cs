@@ -187,18 +187,18 @@ namespace ReactorMaui.Pages
                             new Administrador()
                         },
 
-                        new Tab("HISTORIAL")
+                        new Tab("HISTORIAL", "historial.png")
                         {
                             new Historial()
                             
                         },
 
-                        new Tab("CORREO")
+                        new Tab("CORREO", "correo.png")
                         {
                             new DesactivarCorreo()
                         },
 
-                        new Tab("CASAS")
+                        new Tab("CASAS", "casa.png")
                         {
                             new DesactivarCasa()
                         }

@@ -131,7 +131,8 @@ namespace ReactorMaui.Pages
                     .ColumnSpacing(10)
                     .RowSpacing(10)
                 }
-            };
+            }
+            .BackgroundImageSource("administrador_fondo.png");
         }
 
         public async void VerificarAdministrador()

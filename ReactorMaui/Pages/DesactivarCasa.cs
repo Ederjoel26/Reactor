@@ -47,6 +47,7 @@ namespace ReactorMaui.Pages
                                     new ListView(lv => lvCasas = lv)
                                         .OnLoaded(LlenarLSCasas)
                                         .ItemsSource(State.cCasas)
+                                        .OnItemSelected(CambiarSwitch)
                                     
                                 }
                             }
@@ -73,7 +74,10 @@ namespace ReactorMaui.Pages
                     .GridColumn(1)
                     .BorderColor(Color.Parse("black"))
                 }
-            }.IsVisible(false);
+            }
+            .IsVisible(false)
+            .BackgroundImageSource("desactivar_casa.png")
+            .Title("Actualizar estatus");
         }
 
         public void LlenarLSCasas()
@@ -93,7 +97,7 @@ namespace ReactorMaui.Pages
             lvCasas.ItemsSource = State.cCasas;
         }
 
-        public async void CasaSeleccionada()
+        public async void CambiarSwitch()
         {
             if(!await Permisos.VerificarRegistro())
             {
@@ -104,6 +108,42 @@ namespace ReactorMaui.Pages
             string item = lvCasas.SelectedItem.ToString();
             SetState(s => s.IndexCasa = $"{item[length - 2]}{item[length - 1]}");
 
+            var documentCasa = await CrossCloudFirestore
+                    .Current
+                    .Instance
+                    .Collection(Preferences.Get("NumSerie", null))
+                    .Document("Usuarios")
+                    .Collection("Usuarios")
+                    .Document(State.IndexCasa)
+                    .Collection("Casa")
+                    .Document("Estatus")
+                    .GetAsync();
+
+            if(documentCasa.Data == null)
+            {
+                Alerta.DesplegarAlerta("La casa seleccionada no existe");
+                swCasaActiva.IsToggled = false;
+            }
+            else
+            {
+                EstatusModel estatus = documentCasa.ToObject<EstatusModel>();
+                swCasaActiva.IsToggled = estatus.Estatus;
+            }
+        }
+
+        public async void CasaSeleccionada()
+        {
+            if(!await Permisos.VerificarRegistro())
+            {
+                return;
+            }
+            
+            if(lvCasas.SelectedItem.ToString().Length <= 0)
+            {
+                Alerta.DesplegarAlerta("Seleccione una casa");
+                return;
+            }
+
             try
             {
                 var documentCasa = await CrossCloudFirestore
@@ -113,6 +153,8 @@ namespace ReactorMaui.Pages
                     .Document("Usuarios")
                     .Collection("Usuarios")
                     .Document(State.IndexCasa)
+                    .Collection("Casa")
+                    .Document("Estatus")
                     .GetAsync();
 
                 if (documentCasa.Data == null)
